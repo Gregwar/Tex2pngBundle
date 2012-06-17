@@ -1,0 +1,36 @@
+<?php
+
+namespace Gregwar\Tex2pngBundle\DependencyInjection;
+
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\Config\FileLocator;
+
+/**
+ * Loading configuration
+ *
+ * @author Gregwar <g.passault@gmail.com>
+ */
+class GregwarTex2pngExtension extends Extension
+{
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $cacheDir = 'cache';
+
+        $config = array();
+        foreach ($configs as $subConfig) {
+            $config = array_merge($config, $subConfig);
+        }
+
+        if (isset($config['cache_dir']))
+            $cacheDir = $config['cache_dir'];
+
+        $container->setParameter('gregwar_tex2png.cache_dir', $cacheDir);
+
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.yml');
+    }
+}
+
