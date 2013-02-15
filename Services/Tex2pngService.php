@@ -54,6 +54,6 @@ class Tex2pngService
      */
     public function setHandler($handler_class)
     {
-        $this->handler_class = $handler;
+        $this->handler_class = $handler_class;
     }
 }
