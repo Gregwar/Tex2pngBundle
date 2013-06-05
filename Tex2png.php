@@ -129,23 +129,23 @@ class Tex2png
     {
         $tmpfile = $this->tmpDir . '/' . $this->hash . '.tex';
 
-        $tex = "\documentclass[12pt]{article}\n";
+        $tex = '\documentclass[12pt]{article}'."\n";
         
-        $tex .= "\usepackage[utf8]{inputenc}\n";
+        $tex .= '\usepackage[utf8]{inputenc}'."\n";
 
         // Packages
         foreach ($this->packages as $package) {
             $tex .= '\usepackage{' . $package . "}\n";
         }
         
-        $tex .= "\begin{document}\n";
-        $tex .= "\pagestyle{empty}\n";
-        $tex .= "\begin{displaymath}\n";
+        $tex .= '\begin{document}'."\n";
+        $tex .= '\pagestyle{empty}'."\n";
+        $tex .= '\begin{displaymath}'."\n";
         
         $tex .= $this->formula."\n";
         
-        $tex .= "\end{displaymath}\n";
-        $tex .= "\end{document}\n";
+        $tex .= '\end{displaymath}'."\n";
+        $tex .= '\end{document}'."\n";
 
         if (file_put_contents($tmpfile, $tex) === false)
         {
