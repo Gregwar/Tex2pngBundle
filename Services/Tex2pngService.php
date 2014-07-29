@@ -45,4 +45,9 @@ class Tex2pngService
 
         return $tex2png;
     }
+
+    public function setHandler($handler)
+    {
+        $this->handler_class = $handler; 
+    }
 }
