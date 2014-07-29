@@ -106,8 +106,7 @@ class Tex2png
      */
     public function generate()
     {
-        if ($this->actualFile === null) 
-        {
+        if ($this->actualFile === null) {
             list($this->actualFile, $this->file) = $this->generateFileFromHash($this->hash, '.png');
         }
 
@@ -138,24 +137,22 @@ class Tex2png
     {
         $tmpfile = $this->tmpDir . '/' . $this->hash . '.tex';
 
-        $tex = '\documentclass[12pt]{article}'."\n";
+        $tex = "\documentclass[12pt]{article}\n";
         
-        $tex .= '\usepackage[utf8]{inputenc}'."\n";
+        $tex .= "\usepackage[utf8]{inputenc}\n";
 
         // Packages
         foreach ($this->packages as $package) {
             $tex .= '\usepackage{' . $package . "}\n";
         }
         
-        $tex .= '\begin{document}'."\n";
-        $tex .= '\pagestyle{empty}'."\n";
-        $tex .= '\begin{displaymath}'."\n";
+        $tex .= "\begin{document}\n";
+        $tex .= "\pagestyle{empty}\n";
         
-        $tex .= $this->formula."\n";
+        $tex .= "$". $this->formula."$\n";
         
-        $tex .= '\end{displaymath}'."\n";
-        $tex .= '\end{document}'."\n";
-
+        $tex .= "\\end{document}\n";
+        
         if (file_put_contents($tmpfile, $tex) === false)
         {
             throw new \Exception('Failed to open target file');
@@ -167,12 +164,11 @@ class Tex2png
      */
     protected function latexFile()
     {
-        $command = 'cd ' . $this->tmpDir . '; ' . self::LATEX . ' ' . $this->hash . '.tex < /dev/null |grep ^!|grep -v Emergency > ' . $this->tmpDir . '/' .$this->hash . '.err 2> /dev/null 2>&1';
+        $command = 'cd ' . $this->tmpDir . '; ' . self::LATEX . ' ' . $this->hash . '.tex < /dev/null | grep ^! | grep -v Emergency > ' . $this->tmpDir . '/' .$this->hash . '.err 2> /dev/null 2>&1';
 
         shell_exec($command);
 
-        if (!file_exists($this->tmpDir . '/' . $this->hash . '.dvi'))
-        {
+        if (!file_exists($this->tmpDir . '/' . $this->hash . '.dvi')) {
             throw new \Exception('Unable to compile LaTeX formula (is latex installed? check syntax)');
         }
     }
@@ -185,8 +181,7 @@ class Tex2png
         // XXX background: -bg 'rgb 0.5 0.5 0.5'
         $command = self::DVIPNG . ' -q -T tight -D ' . $this->density . ' -o ' . $this->actualFile . ' ' . $this->tmpDir . '/' . $this->hash . '.dvi 2>&1';
 
-        if (shell_exec($command) === null) 
-        {
+        if (shell_exec($command) === null) {
             throw new \Exception('Unable to convert the DVI file to PNG (is dvipng installed?)');
         }
     }
@@ -203,15 +198,12 @@ class Tex2png
      * Gets the HTML code for the image
      */
     public function html()
-     {
-        if ($this->error)
-        {
+    {
+        if ($this->error) {
             return '<span style="color:red">LaTeX: syntax error (' . $this->error->getMessage() . ')</span>';
         }
-        else
-        {
-            return '<img class="formula" title="Formula" src="' . $this->getFile() . '">';
-        }
+        
+        return '<img class="formula" title="Formula" src="' . $this->getFile() . '">';
     }
 
     /**
@@ -299,4 +291,3 @@ class Tex2png
         return array($actualFile, $file);
     } 
 }
-
